@@ -45,6 +45,19 @@ async function run() {
         const reviewCollection = client.db('plumber').collection('review');
 
 
+        
+    const verifyAdmin = async (req, res, next) => {
+        const initiator = req.decoded.email;
+        const initiatorAccount = await userCollection.findOne({ email: initiator });
+        if (initiatorAccount.role === 'admin') {
+          next();
+        }
+        else {
+          res.status(403).send({ message: 'Forbidden access' })
+        }
+      }
+
+
         //Add Tools
 
         app.post('/tool', async (req, res) => {
@@ -120,7 +133,7 @@ async function run() {
         })
 
         //get oders
-        app.get('/booked', verifyJWT, async (req, res) => {
+        app.get('/booked', verifyJWT,  async (req, res) => {
             const email = req.query.email;
             const decodedEmail = req.decoded.email;
             if (email === decodedEmail) {
@@ -165,7 +178,7 @@ async function run() {
 
 
           //make admin
-          app.put('/user/admin/:email',  async (req, res) => {
+          app.put('/user/admin/:email', verifyAdmin, verifyAdmin,  async (req, res) => {
             const email = req.params.email;
             const filter = { email: email };
             const updateDoc = {
@@ -178,7 +191,7 @@ async function run() {
 
           // find admin
 
-          app.get('/admin/:email', async (req, res) => {
+          app.get('/admin/:email', verifyJWT, verifyAdmin, async (req, res) => {
             const email = req.params.email;
             const user = await userCollection.findOne({ email: email });
             const isAdmin = user.role === 'admin';
