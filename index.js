@@ -53,10 +53,20 @@ async function run() {
 
       // Add bookings
 
-      app.post('/booked', async(req, res) =>{
+      app.put('/booked', async(req, res) =>{
           const booked = req.body;
+          const {id, quantity, availableQuantity} = booked;
+          const filter = {_id: ObjectId(id)};
+          
           console.log(booked);
+          const updatedDoc = {
+            $set: {
+              availableQuantity: availableQuantity - quantity,
+             
+            }
+        }
           const result = await bookedCollection.insertOne(booked);
+          const updateQuantity = await toolsCollection.updateOne(filter, updatedDoc);
           return res.send({
             success: true, result
           });
