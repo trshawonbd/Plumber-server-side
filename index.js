@@ -199,6 +199,17 @@ async function run() {
           });
 
 
+          // delete user
+
+          app.delete('/user/:email', verifyJWT, verifyAdmin, async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const result = await userCollection.deleteOne(query);
+      
+            res.send(result);
+          })
+
+
 
 
 
