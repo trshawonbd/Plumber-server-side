@@ -195,7 +195,7 @@ async function run() {
 
 
         // get all users
-        app.get('/user',  async (req, res) => {
+        app.get('/user', verifyJWT, verifyAdmin, async (req, res) => {
 
             const users = await userCollection.find().toArray();
             res.send(users);
@@ -262,6 +262,34 @@ async function run() {
             const updatedBooking = await bookedCollection.updateOne(filter, updatedDoc);
             res.send(updatedBooking);
           })
+
+          // get all orders for admin
+
+          app.get('/allOrder',  async (req, res) => {
+              const query = {}
+
+            const orders = await bookedCollection.find(query).toArray();
+            res.send(orders);
+          })
+
+
+          // update status from pending to shipped from admin panel
+
+          app.put('/booked/:id',  async (req, res) => {
+            const id = req.params.id;
+            console.log(id);
+
+
+             const filter = {_id: ObjectId(id)}
+            const updateDoc = {
+              $set: { status: 'shipped' },
+            };
+            console.log( filter, updateDoc) 
+            const result = await bookedCollection.updateOne(filter, updateDoc);
+            console.log(result)
+            res.send(result);  
+          })
+
       
       
 
