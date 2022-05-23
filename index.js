@@ -42,6 +42,7 @@ async function run() {
         const toolsCollection = client.db('plumber').collection('tools');
         const bookedCollection = client.db('plumber').collection('booked');
         const userCollection = client.db('plumber').collection('user');
+        const reviewCollection = client.db('plumber').collection('review');
 
 
         //Add Tools
@@ -134,6 +135,17 @@ async function run() {
                 return res.status(403).send({ message: 'Forbidden access' })
             }
 
+        })
+
+
+        //post review
+
+        app.post('/review', async(req,res) =>{
+            const review = req.body;
+            console.log(review);
+             const result = await reviewCollection.insertOne(review); 
+
+            res.send(result);
         })
 
 
