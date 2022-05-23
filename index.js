@@ -203,7 +203,7 @@ async function run() {
 
 
           //make admin
-          app.put('/user/admin/:email', verifyAdmin, verifyAdmin,  async (req, res) => {
+          app.put('/user/admin/:email', verifyJWT, verifyAdmin,  async (req, res) => {
             const email = req.params.email;
             const filter = { email: email };
             const updateDoc = {
@@ -289,6 +289,19 @@ async function run() {
             console.log(result)
             res.send(result);  
           })
+
+          // delete unpaid order from admin end
+
+          app.delete('/booked/:id', verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            console.log(query)
+             const result = await bookedCollection.deleteOne(query);
+      
+            res.send(result); 
+          })
+          
+          
 
       
       
