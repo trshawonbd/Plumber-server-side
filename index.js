@@ -122,9 +122,6 @@ async function run() {
         //get oders
         app.get('/booked', verifyJWT, async (req, res) => {
             const email = req.query.email;
-
-
-
             const decodedEmail = req.decoded.email;
             if (email === decodedEmail) {
                 const query = { email: email };
@@ -147,6 +144,17 @@ async function run() {
 
             res.send(result);
         })
+
+
+        //get review
+
+        app.get('/review', async (req, res) => {
+            const tools = await reviewCollection.find(). toArray();
+            const reversed = tools.reverse();
+
+            res.send(reversed);
+        })
+
 
 
 
