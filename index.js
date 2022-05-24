@@ -45,6 +45,7 @@ async function run() {
         const userCollection = client.db('plumber').collection('user');
         const reviewCollection = client.db('plumber').collection('review');
         const paymentCollection = client.db('plumber').collection('payment');
+        const infoCollection = client.db('plumber').collection('info');
 
 
         
@@ -150,10 +151,11 @@ async function run() {
             const updateDoc = {
                 $set: user,
             };
+            console.log(email, user, filter, updateDoc)
 
-            const result = await userCollection.updateOne(filter, updateDoc, options);
-            const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN, { expiresIn: '1h' });
-            res.send({ result, token });
+            const result = await userCollection.updateOne(filter, updateDoc, options); 
+             const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN, { expiresIn: '1h' }); 
+             res.send({ result, token }); 
 
         })
 
@@ -195,7 +197,7 @@ async function run() {
 
 
         // get all users
-        app.get('/user', verifyJWT, verifyAdmin, async (req, res) => {
+        app.get('/user', verifyJWT , async (req, res) => {
 
             const users = await userCollection.find().toArray();
             res.send(users);
@@ -216,7 +218,7 @@ async function run() {
 
           // find admin
 
-          app.get('/admin/:email', verifyJWT, verifyAdmin, async (req, res) => {
+          app.get('/admin/:email', verifyJWT, async (req, res) => {
             const email = req.params.email;
             const user = await userCollection.findOne({ email: email });
             const isAdmin = user.role === 'admin';
@@ -310,6 +312,49 @@ async function run() {
             const result = await toolsCollection.deleteOne(query);
       
             res.send(result);
+          })
+
+
+          // Post user && admin information
+ 
+/*           app.put('/user/:email', async (req, res) => {
+            const email = req.params.email;
+            const user = req.body;
+            const filter = { email: email };
+            const options = { upsert: true };
+      
+            const updateDoc = {
+              $set: user,
+            };
+      
+             const result = await infoCollection.updateOne(filter, updateDoc, options); 
+            
+            res.send({ result});
+      
+          }) */
+ 
+
+          //get user && admin information
+
+/*           app.get('/info',async(req, res) =>{
+            const email = req.params.email;
+            const query = {};
+            
+            const userInfo = await infoCollection.find(query).toArray();
+            console.log(userInfo)
+      
+            res.send(userInfo);
+          }) */
+
+          app.get('/user/:email', verifyJWT, async(req, res) =>{
+            const email = req.params.email;
+            console.log(email)
+            const filter = {email:email};
+           
+            const userInfo = await userCollection.findOne(filter);
+            console.log(userInfo)
+      
+            res.send(userInfo);
           })
 
 
