@@ -300,6 +300,19 @@ async function run() {
       
             res.send(result); 
           })
+
+
+          // Delete Single tool for Managing Tools Admin Side
+
+          app.delete('/tool/:id', verifyJWT, verifyAdmin, async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await toolsCollection.deleteOne(query);
+      
+            res.send(result);
+          })
+
+
           
           
 
