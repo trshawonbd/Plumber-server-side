@@ -315,36 +315,9 @@ async function run() {
           })
 
 
-          // Post user && admin information
- 
-/*           app.put('/user/:email', async (req, res) => {
-            const email = req.params.email;
-            const user = req.body;
-            const filter = { email: email };
-            const options = { upsert: true };
-      
-            const updateDoc = {
-              $set: user,
-            };
-      
-             const result = await infoCollection.updateOne(filter, updateDoc, options); 
-            
-            res.send({ result});
-      
-          }) */
- 
 
           //get user && admin information
 
-/*           app.get('/info',async(req, res) =>{
-            const email = req.params.email;
-            const query = {};
-            
-            const userInfo = await infoCollection.find(query).toArray();
-            console.log(userInfo)
-      
-            res.send(userInfo);
-          }) */
 
           app.get('/user/:email', verifyJWT, async(req, res) =>{
             const email = req.params.email;
