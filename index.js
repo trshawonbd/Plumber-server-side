@@ -104,7 +104,7 @@ async function run() {
 
         //Get a single Tool
 
-        app.get('/tool/:id', async (req, res) => {
+        app.get('/tool/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const details = await toolsCollection.findOne(query);
@@ -188,7 +188,7 @@ async function run() {
 
         //get review
 
-        app.get('/review', async (req, res) => {
+        app.get('/review', verifyJWT, async (req, res) => {
             const tools = await reviewCollection.find(). toArray();
             const reversed = tools.reverse();
 
@@ -239,7 +239,7 @@ async function run() {
 
           //get bookings by ID
 
-          app.get('/booked/:id',async(req, res) =>{
+          app.get('/booked/:id',verifyJWT, async(req, res) =>{
             const id = req.params.id;
             const query = {_id: ObjectId(id)};
             const booking = await bookedCollection.findOne(query);
@@ -267,7 +267,7 @@ async function run() {
 
           // get all orders for admin
 
-          app.get('/allOrder',  async (req, res) => {
+          app.get('/allOrder', verifyJWT, verifyAdmin, async (req, res) => {
               const query = {}
 
             const orders = await bookedCollection.find(query).toArray();
