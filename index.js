@@ -188,7 +188,7 @@ async function run() {
 
         //get review
 
-        app.get('/review', verifyJWT, async (req, res) => {
+        app.get('/review', async (req, res) => {
             const tools = await reviewCollection.find(). toArray();
             const reversed = tools.reverse();
 
